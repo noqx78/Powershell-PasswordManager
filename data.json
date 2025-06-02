@@ -1,0 +1,17 @@
+{
+  "master": "",
+  "entries": [
+    {
+      "email": "user@example.com",
+      "password": "password123",
+      "website": "https://example.com",
+      "description": "Sample entry"
+    },
+    {
+      "email": "john.doe@mail.com",
+      "password": "S3cure!Pass2025",
+      "website": "https://secure-site.net",
+      "description": "Work login"
+    }
+  ]
+}

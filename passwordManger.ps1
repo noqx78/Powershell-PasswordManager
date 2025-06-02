@@ -5,6 +5,7 @@ using namespace System.Drawing
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
+$json = Get-Content -Path "data.json" -Raw | ConvertFrom-Json
 $masterPassword = "test"
 
 function passwordManager() {
