@@ -6,10 +6,13 @@ Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
 $json = Get-Content -Path "data.json" -Raw | ConvertFrom-Json
-$masterPassword = "test"
+$masterPassword = $json.master
+$name = $env:USERNAME
+
 
 function passwordManager() {
     $form = New-Object System.Windows.Forms.Form
+    
     $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
     $form.Text = 'Password Manager'
     $form.Size = New-Object System.Drawing.Size(750, 650)
@@ -19,7 +22,7 @@ function passwordManager() {
     $iconPath = Join-Path -Path $PSScriptRoot -ChildPath "img\ps_logo.ico"
     $form.Icon = New-Object System.Drawing.Icon($iconPath)
 
-    $imagePath = Join-Path -Path $PSScriptRoot -ChildPath "img\ps_logo.png"
+    $imagePath = Join-Path -Path $PSScriptRoot -ChildPath "img\ps_logo.png" 
     $pictureBox = New-Object System.Windows.Forms.PictureBox
     $pictureBox.Location = New-Object System.Drawing.Point(20, 10)
     $pictureBox.Size = New-Object System.Drawing.Size(150, 150)
@@ -52,17 +55,21 @@ function passwordManager() {
     $form.AcceptButton = $okButton
     $form.Controls.Add($okButton)
 
-    $okButton = New-Object System.Windows.Forms.Button
-    $okButton.Location = New-Object System.Drawing.Point(550, 40)
-    $okButton.Size = New-Object System.Drawing.Size(95, 23)
-    $okButton.Text = 'Logout'
-    $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
-    $form.AcceptButton = $okButton
-    $form.Controls.Add($okButton)
+    $logoutButton = New-Object System.Windows.Forms.Button
+    $logoutButton.Location = New-Object System.Drawing.Point(550, 40)
+    $logoutButton.Size = New-Object System.Drawing.Size(95, 23)
+    $logoutButton.Text = 'Logout'
+    $logoutButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+    $form.AcceptButton = $logoutButton
+    $logoutButton.Add_Click({
+        $form.Close()
+        // HOW DO I CALL OGIN
+    })
+    $form.Controls.Add($logoutButton)
 
     $okButton = New-Object System.Windows.Forms.Button
     $okButton.Location = New-Object System.Drawing.Point(550, 65)
-    $okButton.Size = New-Object System.Drawing.Size(95, 23)
+    $okButton.Size = New-Object System.Drawing.Size(125, 23)
     $okButton.Text = 'Change Masterkey'
     $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
     $form.AcceptButton = $okButton
@@ -99,10 +106,11 @@ function login() {
     $form.StartPosition = 'CenterScreen'
     $form.MaximizeBox = $false
 
-    # Set the form icon
+    # window icons
     $iconPath = Join-Path -Path $PSScriptRoot -ChildPath "img\ps_logo.ico"
     $form.Icon = New-Object System.Drawing.Icon($iconPath)
 
+    # login image
     $imagePath = Join-Path -Path $PSScriptRoot -ChildPath "img\ps_lock.png"
     $pictureBox = New-Object System.Windows.Forms.PictureBox
     $pictureBox.Location = New-Object System.Drawing.Point(20, 20)
@@ -112,13 +120,27 @@ function login() {
     $form.Controls.Add($pictureBox)
 
     # button
-    $okButton = New-Object System.Windows.Forms.Button
-    $okButton.Location = New-Object System.Drawing.Point(425, 170)
-    $okButton.Size = New-Object System.Drawing.Size(75, 23)
-    $okButton.Text = 'Login'
-    $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
-    $form.AcceptButton = $okButton
-    $form.Controls.Add($okButton)
+    $loginButton = New-Object System.Windows.Forms.Button
+    $loginButton.Location = New-Object System.Drawing.Point(425, 170)
+    $loginButton.Size = New-Object System.Drawing.Size(75, 23)
+    $loginButton.Text = 'Login'
+    $loginButton.Add_Click({
+    if ($textBox.Text -eq $masterPassword) {
+        if ($masterPassword -eq "") {
+            [System.Windows.Forms.MessageBox]::Show("please set a MasterPassword", "Error", "ok", "Warning")
+        } else {
+            $form.Close() 
+            passwordManager
+        }
+    }
+    elseif ($textBox.Text = "") {
+         [System.Windows.Forms.MessageBox]::Show("please set a MasterPassword", "Error", "ok", "Warning")
+    }
+    else {
+        [System.Windows.Forms.MessageBox]::Show("false password", "Error", "ok", "Warning")
+    }
+    })
+    $form.Controls.Add($loginButton)
 
     # text
     $label = New-Object System.Windows.Forms.Label
@@ -127,7 +149,7 @@ function login() {
     $label.Text = 'Masterkey Password'
     $form.Controls.Add($label)
 
-    # textbox input
+    # textbox input for masterkey
     $textBox = New-Object System.Windows.Forms.TextBox
     $textBox.Location = New-Object System.Drawing.Point(350, 140)
     $textBox.Size = New-Object System.Drawing.Size(260, 20)
@@ -138,15 +160,8 @@ function login() {
     $form.Add_Shown({ $textBox.Select() })
     $result = $form.ShowDialog()
 
-    if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-        if ($textBox.Text -eq $masterPassword) {
-            passwordManager
-        }
-        else {
-            Write-Host "False"
-        }
-    } 
+   
+
 }
 
 login
-passwordManager
