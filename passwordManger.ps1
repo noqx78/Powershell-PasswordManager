@@ -12,18 +12,63 @@ function passwordManager() {
     $form = New-Object System.Windows.Forms.Form
     $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
     $form.Text = 'Password Manager'
-    $form.Size = New-Object System.Drawing.Size(780, 700)
+    $form.Size = New-Object System.Drawing.Size(750, 650)
     $form.StartPosition = 'CenterScreen'
     $form.MaximizeBox = $false
 
-    $imagePath = Join-Path -Path $PSScriptRoot -ChildPath "img\ps_lock.png"
+    $iconPath = Join-Path -Path $PSScriptRoot -ChildPath "img\ps_logo.ico"
+    $form.Icon = New-Object System.Drawing.Icon($iconPath)
+
+    $imagePath = Join-Path -Path $PSScriptRoot -ChildPath "img\ps_logo.png"
     $pictureBox = New-Object System.Windows.Forms.PictureBox
-    $pictureBox.Location = New-Object System.Drawing.Point(20, 20)
+    $pictureBox.Location = New-Object System.Drawing.Point(20, 10)
     $pictureBox.Size = New-Object System.Drawing.Size(150, 150)
     $pictureBox.SizeMode = [System.Windows.Forms.PictureBoxSizeMode]::Zoom
     $pictureBox.Image = [System.Drawing.Image]::FromFile($imagePath)
     $form.Controls.Add($pictureBox)
 
+    # buttons 
+    $okButton = New-Object System.Windows.Forms.Button
+    $okButton.Location = New-Object System.Drawing.Point(225, 40)
+    $okButton.Size = New-Object System.Drawing.Size(95, 23)
+    $okButton.Text = 'Create Object'
+    $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+    $form.AcceptButton = $okButton
+    $form.Controls.Add($okButton)
+
+    $okButton = New-Object System.Windows.Forms.Button
+    $okButton.Location = New-Object System.Drawing.Point(320, 40)
+    $okButton.Size = New-Object System.Drawing.Size(95, 23)
+    $okButton.Text = 'Change Object'
+    $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+    $form.AcceptButton = $okButton
+    $form.Controls.Add($okButton)
+
+    $okButton = New-Object System.Windows.Forms.Button
+    $okButton.Location = New-Object System.Drawing.Point(415, 40)
+    $okButton.Size = New-Object System.Drawing.Size(95, 23)
+    $okButton.Text = 'Delete Object'
+    $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+    $form.AcceptButton = $okButton
+    $form.Controls.Add($okButton)
+
+    $okButton = New-Object System.Windows.Forms.Button
+    $okButton.Location = New-Object System.Drawing.Point(550, 40)
+    $okButton.Size = New-Object System.Drawing.Size(95, 23)
+    $okButton.Text = 'Logout'
+    $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+    $form.AcceptButton = $okButton
+    $form.Controls.Add($okButton)
+
+    $okButton = New-Object System.Windows.Forms.Button
+    $okButton.Location = New-Object System.Drawing.Point(550, 65)
+    $okButton.Size = New-Object System.Drawing.Size(95, 23)
+    $okButton.Text = 'Change Masterkey'
+    $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+    $form.AcceptButton = $okButton
+    $form.Controls.Add($okButton)
+   
+    # password list
     $dataGridView = New-Object System.Windows.Forms.DataGridView
     $dataGridView.Location = New-Object System.Drawing.Point(20, 190)
     $dataGridView.Size = New-Object System.Drawing.Size(720, 450)
@@ -46,7 +91,6 @@ function passwordManager() {
 }
 
 function login() {
-
     # window
     $form = New-Object System.Windows.Forms.Form
     $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
@@ -54,6 +98,10 @@ function login() {
     $form.Size = New-Object System.Drawing.Size(680, 400)
     $form.StartPosition = 'CenterScreen'
     $form.MaximizeBox = $false
+
+    # Set the form icon
+    $iconPath = Join-Path -Path $PSScriptRoot -ChildPath "img\ps_logo.ico"
+    $form.Icon = New-Object System.Drawing.Icon($iconPath)
 
     $imagePath = Join-Path -Path $PSScriptRoot -ChildPath "img\ps_lock.png"
     $pictureBox = New-Object System.Windows.Forms.PictureBox
