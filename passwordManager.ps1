@@ -84,18 +84,35 @@ function passwordManager() {
     $form.Controls.Add($scrollPanel)
 
     for ($i = 0; $i -lt 20; $i++) {
-        $box = New-Object System.Windows.Forms.GroupBox
-        $box.Text = "Box $($i + 1)"
-        $box.Size = [System.Drawing.Size]::new(350, 80)
-        $box.Location = [System.Drawing.Point]::new(10, $i * 90)
-        $box.BackColor = [System.Drawing.Color]::WhiteSmoke
 
-        $textBox = New-Object System.Windows.Forms.TextBox
-        $textBox.Size = [System.Drawing.Size]::new(350, 20)
-        $textBox.Location = [System.Drawing.Point]::new(15, 30)
-        $box.Controls.Add($textBox)
+        $description = $entry.$description
+        $website = $entry.$website
+        $email = $entry.$email
+        $password = $entry.$password
 
-        $scrollPanel.Controls.Add($box)
+
+        $dataGroupBox = New-Object System.Windows.Forms.GroupBox
+        $dataGroupBox.Text = $service
+        $dataGroupBox.Size = [System.Drawing.Size]::new(330, 70)
+        $dataGroupBox.Location = [System.Drawing.Point]::new(10, 10 + $i * 80)
+        $dataGroupBox.BackColor = [System.Drawing.Color]::WhiteSmoke
+
+        $emailLabel = New-Object System.Windows.Forms.Label
+        $emailLabel.Text = $email
+        $emailLabel.Location = [System.Drawing.Point]::new(10, 25)
+        $emailLabel.Size = [System.Drawing.Size]::new(300, 20)
+        $dataGroupBox.Controls.Add($emailLabel)
+
+        $eventButton = New-Object System.Windows.Forms.Button
+        $eventButton.Text = "Event $i"
+        $eventButton.Location = [System.Drawing.Point]::new(10, 10 + $i * 80)
+        $eventButton.Size = [System.Drawing.Size]::new(75, 23)
+        $eventButton.Add_Click({
+                [System.Windows.Forms.MessageBox]::Show("Event $i clicked for $service", "Event Triggered", "OK", "Information")
+            })
+
+        $scrollPanel.Controls.Add($eventButton)
+        $scrollPanel.Controls.Add($dataGroupBox)
     }
 
     # ui style 
@@ -116,7 +133,7 @@ function passwordManager() {
     #$label.BackColor = 
     $form.Controls.Add($label)
 
-   # $form.Controls.Add($topbarBackground)
+    # $form.Controls.Add($topbarBackground)
     $form.Controls.Add($sidebarBackground)
     
     $result = $form.ShowDialog()
@@ -180,8 +197,6 @@ function login() {
     $textBox.Location = New-Object System.Drawing.Point(350, 140)
     $textBox.Size = New-Object System.Drawing.Size(260, 20)
     $form.Controls.Add($textBox)
-
-   
 
     $form.Add_Shown({ $textBox.Select() })
     $result = $form.ShowDialog()
