@@ -24,7 +24,7 @@ function passwordManager() {
 
     $imagePath = Join-Path -Path $PSScriptRoot -ChildPath "img\ps_logo.png"
     $pictureBox = New-Object System.Windows.Forms.PictureBox
-    $pictureBox.Location = New-Object System.Drawing.Point(0, 10)
+    $pictureBox.Location = New-Object System.Drawing.Point(5, 10)
     $pictureBox.Size = New-Object System.Drawing.Size(100, 100)
     $pictureBox.SizeMode = [System.Windows.Forms.PictureBoxSizeMode]::Zoom
     $pictureBox.Image = [System.Drawing.Image]::FromFile($imagePath)
@@ -33,34 +33,34 @@ function passwordManager() {
 
     # buttons 
     $okButton = New-Object System.Windows.Forms.Button
-    $okButton.Location = New-Object System.Drawing.Point(12, 200)
-    $okButton.Size = New-Object System.Drawing.Size(95, 23)
+    $okButton.Location = New-Object System.Drawing.Point(5, 200)
+    $okButton.Size = New-Object System.Drawing.Size(120, 23)
     $okButton.Text = 'Create Object'
     $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+    $okButton.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#017bfe")
+    $okButton.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
+    $okButton.ForeColor = [System.Drawing.Color]::White
+    $okButton.Font = New-Object System.Drawing.Font("Arial", 10, [System.Drawing.FontStyle]::Bold)
     $form.AcceptButton = $okButton
     $form.Controls.Add($okButton)
 
-    $okButton = New-Object System.Windows.Forms.Button
-    $okButton.Location = New-Object System.Drawing.Point(12, 230)
-    $okButton.Size = New-Object System.Drawing.Size(95, 23)
-    $okButton.Text = 'Change Object'
-    $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
-    $form.AcceptButton = $okButton
-    $form.Controls.Add($okButton)
-
-    $okButton = New-Object System.Windows.Forms.Button
-    $okButton.Location = New-Object System.Drawing.Point(12, 260)
-    $okButton.Size = New-Object System.Drawing.Size(95, 23)
-    $okButton.Text = 'Delete Object'
-    $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
-    $form.AcceptButton = $okButton
-    $form.Controls.Add($okButton)
+    # system user name 
+    $systemNameLabel = New-Object System.Windows.Forms.Label
+    $systemNameLabel.Text = $name
+    $systemNameLabel.Location = [System.Drawing.Point]::new(5, 440)
+    $systemNameLabel.Size = [System.Drawing.Size]::new(100, 20)
+    $form.Controls.Add($systemNameLabel)
 
     $logoutButton = New-Object System.Windows.Forms.Button
-    $logoutButton.Location = New-Object System.Drawing.Point(12, 370)
-    $logoutButton.Size = New-Object System.Drawing.Size(95, 23)
+    $logoutButton.Location = New-Object System.Drawing.Point(5, 470)
+    $logoutButton.Size = New-Object System.Drawing.Size(120, 30)
     $logoutButton.Text = 'Logout'
     $logoutButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+    $logoutButton.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#dc3545")
+    $logoutButton.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
+    $logoutButton.ForeColor = [System.Drawing.Color]::White
+    $logoutButton.Font = New-Object System.Drawing.Font("Arial", 10, [System.Drawing.FontStyle]::Bold)
+    
     $form.AcceptButton = $logoutButton
     $logoutButton.Add_Click({
             $form.Close()
@@ -68,17 +68,25 @@ function passwordManager() {
     $form.Controls.Add($logoutButton)
 
     $okButton = New-Object System.Windows.Forms.Button
-    $okButton.Location = New-Object System.Drawing.Point(5, 340)
-    $okButton.Size = New-Object System.Drawing.Size(110, 23)
+    $okButton.Location = New-Object System.Drawing.Point(5, 230)
+    $okButton.Size = New-Object System.Drawing.Size(120, 23)
     $okButton.Text = 'Change Masterkey'
+    $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+    $form.AcceptButton = $okButton
+    $form.Controls.Add($okButton)
+
+    $okButton = New-Object System.Windows.Forms.Button
+    $okButton.Location = New-Object System.Drawing.Point(5, 260)
+    $okButton.Size = New-Object System.Drawing.Size(120, 23)
+    $okButton.Text = 'Refresh'
     $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
     $form.AcceptButton = $okButton
     $form.Controls.Add($okButton)
    
     # password list
     $scrollPanel = New-Object System.Windows.Forms.Panel
-    $scrollPanel.Location = [System.Drawing.Point]::new(120, 0)
-    $scrollPanel.Size = [System.Drawing.Size]::new(350, 550)
+    $scrollPanel.Location = [System.Drawing.Point]::new(140, 0)
+    $scrollPanel.Size = [System.Drawing.Size]::new(550, 550)
     $scrollPanel.BackColor = [System.Drawing.Color]::LightGray
     $scrollPanel.AutoScroll = $true
     $form.Controls.Add($scrollPanel)
@@ -117,9 +125,9 @@ function passwordManager() {
 
     # ui style 
     $sidebarBackground = New-Object System.Windows.Forms.Panel
-    $sidebarBackground.Size = [System.Drawing.Size]::new(120, 550)
-    $sidebarBackground.Location = [System.Drawing.Point]::new(0, 0)
-    $sidebarBackground.BackColor = [System.Drawing.Color]::Gray
+    $sidebarBackground.Size = [System.Drawing.Size]::new(5, 550)
+    $sidebarBackground.Location = [System.Drawing.Point]::new(135, 0)
+    $sidebarBackground.BackColor = [System.Drawing.Color]::Black
 
     $topbarBackground = New-Object System.Windows.Forms.Panel
     $topbarBackground.Size = [System.Drawing.Size]::new(730, 30)
@@ -128,7 +136,7 @@ function passwordManager() {
 
     $label = New-Object System.Windows.Forms.Label
     $label.Text = "Password Manager"
-    $label.Location = New-Object System.Drawing.Point(5, 120)
+    $label.Location = New-Object System.Drawing.Point(13, 110)
     $label.Size = New-Object System.Drawing.Size(110, 20)
     #$label.BackColor = 
     $form.Controls.Add($label)
