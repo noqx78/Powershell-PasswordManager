@@ -16,7 +16,50 @@ function userDataPopUp() {
         [string]$DataWebsite,
         [string]$DataDescription
     )
+    
+    function changeMasterKey() {
+        $form = New-Object System.Windows.Forms.Form
+        $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
+        $form.Text = 'Master Password'
+        $form.Size = New-Object System.Drawing.Size(350, 180)
+        $form.StartPosition = 'CenterScreen'
+        $form.MaximizeBox = $false
 
+        $label = New-Object System.Windows.Forms.Label
+        $label.Text = "New Master Password"
+        $label.Location = New-Object System.Drawing.Point(20, 20)
+        $label.Size = New-Object System.Drawing.Size(300, 20)
+        $form.Controls.Add($label)
+
+        $textBox = New-Object System.Windows.Forms.TextBox
+        $textBox.Location = New-Object System.Drawing.Point(20, 50)
+        $textBox.Size = New-Object System.Drawing.Size(300, 20)
+        $textBox.UseSystemPasswordChar = $true
+        $form.Controls.Add($textBox)
+
+        $saveButton = New-Object System.Windows.Forms.Button
+        $saveButton.Text = 'Save'
+        $saveButton.Location = New-Object System.Drawing.Point(120, 90)
+        $saveButton.Size = New-Object System.Drawing.Size(100, 30)
+        $saveButton.Add_Click({
+                if ($textBox.Text -eq "") {
+                    [System.Windows.Forms.MessageBox]::Show("Password cannot be empty.", "Error", "OK", "Warning")
+                }
+                else {
+                    $json.master = $textBox.Text
+                    $json | ConvertTo-Json | Set-Content -Path "data.json"
+                    $global:json = Get-Content -Path "data.json" -Raw | ConvertFrom-Json
+                    $global:masterPassword = $json.master
+                    [System.Windows.Forms.MessageBox]::Show("Master password set successfully.", "Success", "OK", "Information")
+                    $form.Close()
+                    login
+                }
+            })
+        $form.Controls.Add($saveButton)
+
+        $form.ShowDialog()
+    }
+    
     $form = New-Object System.Windows.Forms.Form
     $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
     $form.Text = 'Password Manager Login'
@@ -29,7 +72,6 @@ function userDataPopUp() {
     
     $label = New-Object System.Windows.Forms.Label
     $label.Text = "Email: $DataEmail "
-    Write-Host "Email: $DataEmail"
     $label.Location = New-Object System.Drawing.Point(10, 10)
     $label.Size = New-Object System.Drawing.Size(250, 20)
     $form.Controls.Add($label)
@@ -43,7 +85,97 @@ function userDataPopUp() {
     $form.ShowDialog()
 }
 
+function createObject {
+    $form = New-Object System.Windows.Forms.Form
+    $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
+    $form.MaximizeBox = $false
+    $form.MinimizeBox = $false
 
+    $form.Text = 'Create Object'
+    $form.Size = New-Object System.Drawing.Size(300, 200)
+    $form.StartPosition = 'CenterScreen'
+
+    $nameLabel = New-Object System.Windows.Forms.Label
+    $nameLabel.Text = "Name:"
+    $nameLabel.Location = New-Object System.Drawing.Point(20, 20)
+    $nameLabel.Size = New-Object System.Drawing.Size(70, 20)
+    $form.Controls.Add($nameLabel)
+
+    $emailLabel = New-Object System.Windows.Forms.Label
+    $emailLabel.Text = "Email:"
+    $emailLabel.Location = New-Object System.Drawing.Point(20, 50)
+    $emailLabel.Size = New-Object System.Drawing.Size(70, 20)
+    $form.Controls.Add($emailLabel)
+
+    $passwordLabel = New-Object System.Windows.Forms.Label
+    $passwordLabel.Text = "Password:"
+    $passwordLabel.Location = New-Object System.Drawing.Point(20, 80)
+    $passwordLabel.Size = New-Object System.Drawing.Size(70, 20)
+    $form.Controls.Add($passwordLabel)
+
+    $websiteLabel = New-Object System.Windows.Forms.Label
+    $websiteLabel.Text = "Website:"
+    $websiteLabel.Location = New-Object System.Drawing.Point(20, 110)
+    $websiteLabel.Size = New-Object System.Drawing.Size(70, 20)
+    $form.Controls.Add($websiteLabel)
+
+    $nameTextBox = New-Object System.Windows.Forms.TextBox
+    $nameTextBox.Location = New-Object System.Drawing.Point(100, 20)
+    $nameTextBox.Size = New-Object System.Drawing.Size(170, 20)
+    $form.Controls.Add($nameTextBox)
+
+    $emailTextBox = New-Object System.Windows.Forms.TextBox
+    $emailTextBox.Location = New-Object System.Drawing.Point(100, 50)
+    $emailTextBox.Size = New-Object System.Drawing.Size(170, 20)
+    $form.Controls.Add($emailTextBox)
+
+    $passwordTextBox = New-Object System.Windows.Forms.TextBox
+    $passwordTextBox.Location = New-Object System.Drawing.Point(100, 80)
+    $passwordTextBox.Size = New-Object System.Drawing.Size(170, 20)
+    $passwordTextBox.UseSystemPasswordChar = $true
+    $form.Controls.Add($passwordTextBox)
+
+    $websiteTextBox = New-Object System.Windows.Forms.TextBox
+    $websiteTextBox.Location = New-Object System.Drawing.Point(100, 110)
+    $websiteTextBox.Size = New-Object System.Drawing.Size(170, 20)
+    $form.Controls.Add($websiteTextBox)
+
+    $saveButton = New-Object System.Windows.Forms.Button
+    $saveButton.Location = New-Object System.Drawing.Point(100, 140)
+    $saveButton.Size = New-Object System.Drawing.Size(75, 23)
+    $saveButton.Text = 'Save'
+    $saveButton.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#017bfe")
+    $saveButton.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
+    $saveButton.ForeColor = [System.Drawing.Color]::White
+    $saveButton.Font = New-Object System.Drawing.Font("Arial", 10, [System.Drawing.FontStyle]::Bold)
+    $saveButton.Add_Click({
+            $newEntry = @{
+                "service"  = $nameTextBox.Text
+                "email"    = $emailTextBox.Text
+                "password" = $passwordTextBox.Text
+                "website"  = $websiteTextBox.Text
+            }
+        
+            # Add new entry to json
+            $json.entries += $newEntry
+            $jsonContent = $json | ConvertTo-Json
+            Set-Content -Path "data.json" -Value $jsonContent
+
+            [System.Windows.Forms.MessageBox]::Show("Entry saved successfully!", "Success", "OK", "Information")
+            $form.Close()
+        })
+    $form.Controls.Add($saveButton)
+
+    # Cancel button
+    $cancelButton = New-Object System.Windows.Forms.Button
+    $cancelButton.Location = New-Object System.Drawing.Point(195, 140)
+    $cancelButton.Size = New-Object System.Drawing.Size(75, 23)
+    $cancelButton.Text = 'Cancel'
+    $cancelButton.Add_Click({ $form.Close() })
+    $form.Controls.Add($cancelButton)
+
+    $result = $form.ShowDialog()
+}
 function passwordManager() {
     $form = New-Object System.Windows.Forms.Form
     
@@ -75,6 +207,9 @@ function passwordManager() {
     $okButton.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
     $okButton.ForeColor = [System.Drawing.Color]::White
     $okButton.Font = New-Object System.Drawing.Font("Arial", 10, [System.Drawing.FontStyle]::Bold)
+    $okButton.Add_Click({
+            createObject
+        })
     $form.AcceptButton = $okButton
     $form.Controls.Add($okButton)
 
@@ -105,17 +240,19 @@ function passwordManager() {
     $okButton.Location = New-Object System.Drawing.Point(5, 230)
     $okButton.Size = New-Object System.Drawing.Size(120, 23)
     $okButton.Text = 'Change Masterkey'
-    $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+    $okButton.Add_Click({
+            changeMasterKey
+        })
     $form.AcceptButton = $okButton
     $form.Controls.Add($okButton)
 
-    $okButton = New-Object System.Windows.Forms.Button
-    $okButton.Location = New-Object System.Drawing.Point(5, 260)
-    $okButton.Size = New-Object System.Drawing.Size(120, 23)
-    $okButton.Text = 'Refresh'
-    $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
-    $form.AcceptButton = $okButton
-    $form.Controls.Add($okButton)
+    # $okButton = New-Object System.Windows.Forms.Button
+    # $okButton.Location = New-Object System.Drawing.Point(5, 260)
+    # $okButton.Size = New-Object System.Drawing.Size(120, 23)
+    # $okButton.Text = 'Refresh'
+    # $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+    # $form.AcceptButton = $okButton
+    # $form.Controls.Add($okButton)
    
     # password list
     $scrollPanel = New-Object System.Windows.Forms.Panel
@@ -127,7 +264,7 @@ function passwordManager() {
 
     $i = 0
     foreach ($entry in $json.entries) {
-        $description = $entry.description
+        $name = $entry.name
         $website = $entry.website
         $email = $entry.email
         $password = $entry.password
@@ -146,7 +283,7 @@ function passwordManager() {
         $dataGroupBox.Controls.Add($emailLabel)
 
         $descriptionLabel = New-Object System.Windows.Forms.Label
-        $descriptionLabel.Text = $description
+        $descriptionLabel.Text = $name
         $descriptionLabel.Location = [System.Drawing.Point]::new(10, 20)
         $descriptionLabel.Size = [System.Drawing.Size]::new(300, 20)
         $dataGroupBox.Controls.Add($descriptionLabel)
@@ -167,7 +304,7 @@ function passwordManager() {
         $eventButton.ForeColor = [System.Drawing.Color]::White
         $eventButton.Font = New-Object System.Drawing.Font("Arial", 10, [System.Drawing.FontStyle]::Bold)
         $eventButton.Add_Click({
-                userDataPopUp $entry.email $password $website $description
+                userDataPopUp $entry.email $password $website $name
             })
         $dataGroupBox.Controls.Add($eventButton)
 
@@ -228,16 +365,8 @@ function login() {
     $loginButton.Text = 'Login'
     $loginButton.Add_Click({
             if ($textBox.Text -eq $masterPassword) {
-                if ($masterPassword -eq "") {
-                    [System.Windows.Forms.MessageBox]::Show("please set a MasterPassword", "Error", "ok", "Warning")
-                }
-                else {
-                    $form.Close() 
-                    passwordManager
-                }
-            }
-            elseif ($textBox.Text = "") {
-                [System.Windows.Forms.MessageBox]::Show("please set a MasterPassword", "Error", "ok", "Warning")
+                $form.Close() 
+                passwordManager
             }
             else {
                 [System.Windows.Forms.MessageBox]::Show("false password", "Error", "ok", "Warning")
@@ -263,5 +392,53 @@ function login() {
 
 }
 
-#login
-passwordManager
+if ($json -and $json.master -ne $null) {
+    if ($json.master -eq "") {
+        $form = New-Object System.Windows.Forms.Form
+        $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
+        $form.Text = 'Master Password'
+        $form.Size = New-Object System.Drawing.Size(350, 180)
+        $form.StartPosition = 'CenterScreen'
+        $form.MaximizeBox = $false
+
+        $label = New-Object System.Windows.Forms.Label
+        $label.Text = "New Master Password"
+        $label.Location = New-Object System.Drawing.Point(20, 20)
+        $label.Size = New-Object System.Drawing.Size(300, 20)
+        $form.Controls.Add($label)
+
+        $textBox = New-Object System.Windows.Forms.TextBox
+        $textBox.Location = New-Object System.Drawing.Point(20, 50)
+        $textBox.Size = New-Object System.Drawing.Size(300, 20)
+        $textBox.UseSystemPasswordChar = $true
+        $form.Controls.Add($textBox)
+
+        $saveButton = New-Object System.Windows.Forms.Button
+        $saveButton.Text = 'Save'
+        $saveButton.Location = New-Object System.Drawing.Point(120, 90)
+        $saveButton.Size = New-Object System.Drawing.Size(100, 30)
+        $saveButton.Add_Click({
+                if ($textBox.Text -eq "") {
+                    [System.Windows.Forms.MessageBox]::Show("Password cannot be empty.", "Error", "OK", "Warning")
+                }
+                else {
+                    $json.master = $textBox.Text
+                    $json | ConvertTo-Json | Set-Content -Path "data.json"
+                    $global:json = Get-Content -Path "data.json" -Raw | ConvertFrom-Json
+                    $global:masterPassword = $json.master
+                    [System.Windows.Forms.MessageBox]::Show("Master password set successfully.", "Success", "OK", "Information")
+                    $form.Close()
+                    login
+                }
+            })
+        $form.Controls.Add($saveButton)
+
+        $form.ShowDialog()
+    }
+    else {
+        login
+    }
+}
+else {
+    [System.Windows.Forms.MessageBox]::Show("Error loading data.", "Error", "OK", "Warning")
+}
