@@ -17,47 +17,43 @@ function userDataPopUp() {
         [string]$DataDescription
     )
     
-    function changeMasterKey() {
-        $form = New-Object System.Windows.Forms.Form
-        $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
-        $form.Text = 'Master Password'
-        $form.Size = New-Object System.Drawing.Size(350, 180)
-        $form.StartPosition = 'CenterScreen'
-        $form.MaximizeBox = $false
-
-        $label = New-Object System.Windows.Forms.Label
-        $label.Text = "New Master Password"
-        $label.Location = New-Object System.Drawing.Point(20, 20)
-        $label.Size = New-Object System.Drawing.Size(300, 20)
-        $form.Controls.Add($label)
-
-        $textBox = New-Object System.Windows.Forms.TextBox
-        $textBox.Location = New-Object System.Drawing.Point(20, 50)
-        $textBox.Size = New-Object System.Drawing.Size(300, 20)
-        $textBox.UseSystemPasswordChar = $true
-        $form.Controls.Add($textBox)
-
-        $saveButton = New-Object System.Windows.Forms.Button
-        $saveButton.Text = 'Save'
-        $saveButton.Location = New-Object System.Drawing.Point(120, 90)
-        $saveButton.Size = New-Object System.Drawing.Size(100, 30)
-        $saveButton.Add_Click({
-                if ($textBox.Text -eq "") {
-                    [System.Windows.Forms.MessageBox]::Show("Password cannot be empty.", "Error", "OK", "Warning")
-                }
-                else {
-                    $json.master = $textBox.Text
-                    $json | ConvertTo-Json | Set-Content -Path "data.json"
-                    $global:json = Get-Content -Path "data.json" -Raw | ConvertFrom-Json
-                    $global:masterPassword = $json.master
-                    [System.Windows.Forms.MessageBox]::Show("Master password set successfully.", "Success", "OK", "Information")
-                    $form.Close()
-                    login
-                }
-            })
-        $form.Controls.Add($saveButton)
-
-        $form.ShowDialog()
+function changeMasterKey() {
+    $form = New-Object System.Windows.Forms.Form
+    $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
+    $form.Text = 'Master Password'
+    $form.Size = New-Object System.Drawing.Size(350, 180)
+    $form.StartPosition = 'CenterScreen'
+    $form.MaximizeBox = $false
+    $label = New-Object System.Windows.Forms.Label
+    $label.Text = "New Master Password"
+    $label.Location = New-Object System.Drawing.Point(20, 20)
+    $label.Size = New-Object System.Drawing.Size(300, 20)
+    $form.Controls.Add($label)
+    $textBox = New-Object System.Windows.Forms.TextBox
+    $textBox.Location = New-Object System.Drawing.Point(20, 50)
+    $textBox.Size = New-Object System.Drawing.Size(300, 20)
+    $textBox.UseSystemPasswordChar = $true
+    $form.Controls.Add($textBox)
+    $saveButton = New-Object System.Windows.Forms.Button
+    $saveButton.Text = 'Save'
+    $saveButton.Location = New-Object System.Drawing.Point(120, 90)
+    $saveButton.Size = New-Object System.Drawing.Size(100, 30)
+    $saveButton.Add_Click({
+            if ($textBox.Text -eq "") {
+                [System.Windows.Forms.MessageBox]::Show("Password cannot be empty.", "Error", "OK", "Warning")
+            }
+            else {
+                $json.master = $textBox.Text
+                $json | ConvertTo-Json | Set-Content -Path "data.json"
+                $global:json = Get-Content -Path "data.json" -Raw | ConvertFrom-Json
+                $global:masterPassword = $json.master
+                [System.Windows.Forms.MessageBox]::Show("Master password set successfully.", "Success", "OK", "Information")
+                $form.Close()
+                login
+            }
+        })
+    $form.Controls.Add($saveButton)
+    $form.ShowDialog()
     }
     
     $form = New-Object System.Windows.Forms.Form

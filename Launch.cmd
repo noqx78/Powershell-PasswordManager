@@ -1,3 +1,3 @@
 @echo off
-powershell -ExecutionPolicy Bypass -Command "& './passwordManger.ps1'"
+powershell -ExecutionPolicy Bypass -Command "& './passwordManager.ps1'"
 pause
