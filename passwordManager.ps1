@@ -9,7 +9,8 @@ $json = Get-Content -Path "data.json" -Raw | ConvertFrom-Json
 $masterPassword = $json.master
 $name = $env:USERNAME
 
-function userDataPopUp {
+
+${function:Global:userDataPopUp} = {
     param(
         [string]$DataEmail,
         [string]$DataPassword, 
