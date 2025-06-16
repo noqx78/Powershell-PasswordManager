@@ -1,6 +1,13 @@
 #### Powershell Password Manager
 
-if [Launch.cmd](https://github.com/noqx78/Powershell-PasswordManager/blob/main/Launch.cmd) wont work use [Visual Studio Code](https://code.visualstudio.com/)
+> ⓘ Info
+
+> To run the Password Manager, right-click the file and select “Run with PowerShell” from the context menu.
+
+|           | value |
+| --------- | ----- |
+| MasterKey | 123   |
+|           |       |
 
 ##### Preview
 
