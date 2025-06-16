@@ -1,7 +1,6 @@
 #### Powershell Password Manager
 
 > ⓘ Info
-
 > To run the Password Manager, right-click the file and select “Run with PowerShell” from the context menu.
 
 
