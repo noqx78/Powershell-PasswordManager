@@ -172,7 +172,36 @@ function userDataPopUp() {
                 Start-Process $DataWebsite
             }
         })
+
+   
     $form.Controls.Add($openWebsiteBtn)
+
+    $deleteButton = New-Object System.Windows.Forms.Button
+    $deleteButton.Text = 'Delete'
+    $deleteButton.Location = New-Object System.Drawing.Point(260, 180)
+    $deleteButton.Size = New-Object System.Drawing.Size(75, 30)
+    $deleteButton.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#dc3545")
+    $deleteButton.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
+    $deleteButton.ForeColor = [System.Drawing.Color]::White
+    $deleteButton.Font = New-Object System.Drawing.Font("Arial", 10, [System.Drawing.FontStyle]::Bold)
+    $deleteButton.Add_Click({ 
+            $result = [System.Windows.Forms.MessageBox]::Show(
+                "Are you sure?", 
+                "Confirm", 
+                [System.Windows.Forms.MessageBoxButtons]::YesNo,
+                [System.Windows.Forms.MessageBoxIcon]::Warning)
+        
+            if ($result -eq [System.Windows.Forms.DialogResult]::Yes) {
+                $global:json.entries = $global:json.entries | Where-Object { 
+                    $_.service -ne $DataService 
+                }
+                $global:json | ConvertTo-Json | Set-Content -Path "data.json"
+                [System.Windows.Forms.MessageBox]::Show("Entry deleted", "Success", "OK", "Information")
+                $form.Close()
+                passwordManager
+            }
+        })
+    $form.Controls.Add($deleteButton)
 
     # Close Button
     $okButton = New-Object System.Windows.Forms.Button

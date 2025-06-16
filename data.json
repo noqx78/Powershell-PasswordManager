@@ -1,23 +1,9 @@
 {
   "master": "123",
-  "entries": [
-    {
-      "email": "user@example.com",
-      "password": "password123",
-      "website": "https://example.com",
-      "name": "Sample entry"
-    },
-    {
-      "password": "dasaydfx",
-      "website": "yfsafas",
-      "service": "jbadsis",
-      "email": "hj"
-    },
-    {
-      "password": "",
-      "website": "",
-      "service": "",
-      "email": ""
-    }
-  ]
+  "entries": {
+    "email": "user@example.com",
+    "password": "password123",
+    "website": "https://example.com",
+    "name": "Sample entry"
+  }
 }
