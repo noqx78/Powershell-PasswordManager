@@ -540,7 +540,6 @@ if ($null -ne $json -and $null -ne $json.master) {
                     $global:json = Get-Content -Path "data.json" -Raw | ConvertFrom-Json
                     [System.Windows.Forms.MessageBox]::Show("Master password set successfully.", "Success", "OK", "Information")
                     $form.Close()
-                    login
                 }
             })
         $form.Controls.Add($saveButton)
