@@ -11,13 +11,9 @@ $name = $env:USERNAME
 
 function userDataPopUp {
     param(
-        [Parameter(Mandatory = $true)]
         [string]$DataEmail,
-        [Parameter(Mandatory = $true)]
         [string]$DataPassword, 
-        [Parameter(Mandatory = $true)]
         [string]$DataWebsite,
-        [Parameter(Mandatory = $true)]
         [string]$DataService
     )
     
