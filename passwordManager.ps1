@@ -13,7 +13,7 @@ $name = $env:USERNAME
 ${function:Global:userDataPopUp} = {
     param(
         [string]$DataEmail,
-        [string]$DataPassword, 
+        [string]$DataPassword, # SecureString  wäre für verschlüsslung oder so aber dan geht der code nicht mehr:(
         [string]$DataWebsite,
         [string]$DataService
     )
@@ -132,7 +132,7 @@ ${function:Global:userDataPopUp} = {
     $openWebsiteBtn.Size = New-Object System.Drawing.Size(50, 25)
     $openWebsiteBtn.Add_Click({
             if ($DataWebsite -and $DataWebsite -ne "") {
-                Start-Process $DataWebsite
+                Start-Process $DataWebsite # geht nur wenn https://www oder https:// davor steht
             }
         })
 
@@ -147,23 +147,21 @@ ${function:Global:userDataPopUp} = {
     $deleteButton.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
     $deleteButton.ForeColor = [System.Drawing.Color]::White
     $deleteButton.Font = New-Object System.Drawing.Font("Arial", 10, [System.Drawing.FontStyle]::Bold)
-    $deleteButton.Add_Click({ 
-            $result = [System.Windows.Forms.MessageBox]::Show(
-                "Are you sure?", 
-                "Confirm", 
-                [System.Windows.Forms.MessageBoxButtons]::YesNo,
-                [System.Windows.Forms.MessageBoxIcon]::Warning)
-        
-            if ($result -eq [System.Windows.Forms.DialogResult]::Yes) {
-                $global:json.entries = @($global:json.entries | Where-Object { 
-                        $_.service -ne $DataService 
-                    })
-                $global:json | ConvertTo-Json -Depth 10 | Set-Content -Path "data.json"
-                [System.Windows.Forms.MessageBox]::Show("Entry deleted", "Success", "OK", "Information")
-                $form.Close()
-                passwordManager
-            }
-        })
+    $deleteButton.Add_Click({
+        $confirm = [System.Windows.Forms.MessageBox]::Show(
+            "Are you sure?",
+            "Confirm",
+            [System.Windows.Forms.MessageBoxButtons]::YesNo,
+            [System.Windows.Forms.MessageBoxIcon]::Warning
+        )
+        if ($confirm -eq [System.Windows.Forms.DialogResult]::Yes) {
+            $global:json.entries = $global:json.entries | Where-Object { $_.service -ne $DataService } # $_ der jzige eintrag  | { $_.service -ne $DataService } sorgt dafür das es nach dem login sucht das genau service  und $DataService  entspricht und das löscht
+            $global:json | ConvertTo-Json -Depth 10 | Set-Content -Path "data.json" # -depth 10 = kann bis  zu 10 zeilen schreiben damit es keine probleme gibt:)
+            [System.Windows.Forms.MessageBox]::Show("Entry deleted", "Success", "OK", "Information")
+            $form.Close()
+            passwordManager
+        }
+    })
     $form.Controls.Add($deleteButton)
 
     # Close Button
@@ -289,7 +287,7 @@ function createObject {
                 "website"  = $websiteTextBox.Text
             }
         
-            # Add new entry to json
+            # neus login zu der json
             $json.entries += $newEntry
             $jsonContent = $json | ConvertTo-Json
             Set-Content -Path "data.json" -Value $jsonContent
@@ -426,7 +424,7 @@ function passwordManager() {
         $eventButton.FlatAppearance.MouseOverBackColor = [System.Drawing.ColorTranslator]::FromHtml("#e9ecef")
         $eventButton.Add_Click({
                 userDataPopUp -DataEmail $currentEntry.email -DataPassword $currentEntry.password -DataWebsite $currentEntry.website -DataService $currentEntry.service
-            }.GetNewClosure())
+            }.GetNewClosure()) # freezed auf eine art die daten das nicht überall das gleiche steht | https://vexx32.github.io/2020/05/30/Scriptblock-GetNewClosure/
         
         $dataGroupBox.Controls.Add($eventButton)
         $scrollPanel.Controls.Add($dataGroupBox)
