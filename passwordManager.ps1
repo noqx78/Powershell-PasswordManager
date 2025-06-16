@@ -192,10 +192,10 @@ function userDataPopUp {
                 [System.Windows.Forms.MessageBoxIcon]::Warning)
         
             if ($result -eq [System.Windows.Forms.DialogResult]::Yes) {
-                $global:json.entries = $global:json.entries | Where-Object { 
-                    $_.service -ne $DataService 
-                }
-                $global:json | ConvertTo-Json | Set-Content -Path "data.json"
+                $global:json.entries = @($global:json.entries | Where-Object { 
+                        $_.service -ne $DataService 
+                    })
+                $global:json | ConvertTo-Json -Depth 10 | Set-Content -Path "data.json"
                 [System.Windows.Forms.MessageBox]::Show("Entry deleted", "Success", "OK", "Information")
                 $form.Close()
                 passwordManager
