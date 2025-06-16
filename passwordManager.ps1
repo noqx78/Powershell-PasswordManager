@@ -9,11 +9,15 @@ $json = Get-Content -Path "data.json" -Raw | ConvertFrom-Json
 $masterPassword = $json.master
 $name = $env:USERNAME
 
-function userDataPopUp() {
+function userDataPopUp {
     param(
+        [Parameter(Mandatory = $true)]
         [string]$DataEmail,
-        [string]$DataPassword,
+        [Parameter(Mandatory = $true)]
+        [string]$DataPassword, 
+        [Parameter(Mandatory = $true)]
         [string]$DataWebsite,
+        [Parameter(Mandatory = $true)]
         [string]$DataService
     )
     
@@ -46,7 +50,6 @@ function userDataPopUp() {
                     $json.master = $textBox.Text
                     $json | ConvertTo-Json | Set-Content -Path "data.json"
                     $global:json = Get-Content -Path "data.json" -Raw | ConvertFrom-Json
-                    $global:masterPassword = $json.master
                     [System.Windows.Forms.MessageBox]::Show("Master password set successfully.", "Success", "OK", "Information")
                     $form.Close()
                     login
@@ -307,7 +310,7 @@ function createObject {
     $cancelButton.Add_Click({ $form.Close() })
     $form.Controls.Add($cancelButton)
 
-    $result = $form.ShowDialog()
+    $form.ShowDialog()
 }
 
 function passwordManager() {
@@ -390,7 +393,7 @@ function passwordManager() {
 
     $i = 0
     foreach ($entry in $json.entries) {
-        $currentEntry = $entry  # Capture current entry for the closure
+        $currentEntry = $entry  
         
         $dataGroupBox = New-Object System.Windows.Forms.GroupBox
         $dataGroupBox.Text = $currentEntry.service
@@ -447,7 +450,7 @@ function passwordManager() {
 
     $form.Controls.Add($sidebarBackground)
     
-    $result = $form.ShowDialog()
+    $form.ShowDialog()
 }
 
 function login() {
@@ -502,11 +505,11 @@ function login() {
     $form.Controls.Add($textBox)
 
     $form.Add_Shown({ $textBox.Select() })
-    $result = $form.ShowDialog()
+    $form.ShowDialog()
 }
 
-if ($json -and $json.master -ne $null) {
-    if ($json.master -eq "") {
+if ($null -ne $json -and $null -ne $json.master) {
+    if ("" -eq $json.master) {
         $form = New-Object System.Windows.Forms.Form
         $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
         $form.Text = 'Master Password'
@@ -538,7 +541,6 @@ if ($json -and $json.master -ne $null) {
                     $json.master = $textBox.Text
                     $json | ConvertTo-Json | Set-Content -Path "data.json"
                     $global:json = Get-Content -Path "data.json" -Raw | ConvertFrom-Json
-                    $global:masterPassword = $json.master
                     [System.Windows.Forms.MessageBox]::Show("Master password set successfully.", "Success", "OK", "Information")
                     $form.Close()
                     login
