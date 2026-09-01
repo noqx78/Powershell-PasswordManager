@@ -3,7 +3,7 @@
     "entries":  [
                     {
                         "email":  "user@example.com",
-                        "password":  "password123",
+                        "password":  "password67",
                         "website":  "https://example.com",
                         "service":  "Sample entry"
                     }

@@ -1,4 +1,4 @@
-#### Powershell Password Manager
+#### Powershell Password Moerzer
 [![Latest Release](https://img.shields.io/github/v/release/noqx78/Powershell-PasswordManager?label=version&style=for-the-badge&color=blue)](https://github.com/noqx78/Powershell-PasswordManager/releases/latest)
 
 
